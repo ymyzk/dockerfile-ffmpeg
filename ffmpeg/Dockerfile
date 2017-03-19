@@ -32,7 +32,7 @@ ENV YASM_VER 1.3.0
 
 RUN cd $SRC_DIR && \
     wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM_VER.tar.gz && \
-    tar xzvf yasm.tar.gz && \
+    tar xf yasm.tar.gz && \
     rm yasm.tar.gz && \
     cd yasm-$YASM_VER && \
     ./configure --prefix="$BUILD_DIR" --bindir="$BIN_DIR" && \
@@ -42,7 +42,7 @@ RUN cd $SRC_DIR && \
 
 RUN cd $SRC_DIR && \
     wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
-    tar xjvf last_x264.tar.bz2 && \
+    tar xf last_x264.tar.bz2 && \
     rm last_x264.tar.bz2 && \
     cd x264-snapshot* && \
     ./configure \
@@ -58,7 +58,7 @@ RUN cd $SRC_DIR && \
 # TODO: should specidy build path on cmake instead of `ln -s ...`
 RUN cd $SRC_DIR && \
     wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/default.tar.gz && \
-    tar xzvf x265.tar.gz && \
+    tar xf x265.tar.gz && \
     rm x265.tar.gz && \
     cd ./multicoreware*/build/linux && \
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$BUILD_DIR" -DENABLE_SHARED:bool=off ../../source && \
@@ -69,7 +69,7 @@ RUN cd $SRC_DIR && \
 
 RUN cd $SRC_DIR && \
     wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master && \
-    tar xzvf fdk-aac.tar.gz && \
+    tar xf fdk-aac.tar.gz && \
     rm fdk-aac.tar.gz && \
     cd mstorsjo-fdk-aac* && \
     autoreconf -fiv && \
@@ -80,7 +80,7 @@ RUN cd $SRC_DIR && \
 
 RUN cd $SRC_DIR && \
     wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz && \
-    tar xzvf lame.tar.gz && \
+    tar xf lame.tar.gz && \
     rm lame.tar.gz && \
     cd lame-3.99.5 && \
     ./configure --prefix="$BUILD_DIR" --enable-nasm --disable-shared && \
@@ -90,7 +90,7 @@ RUN cd $SRC_DIR && \
 
 RUN cd $SRC_DIR && \
     wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
-    tar xjvf libvpx.tar.bz2 && \
+    tar xf libvpx.tar.bz2 && \
     rm libvpx.tar.bz2 && \
     cd "libvpx-$LIBVPX_VER" && \
     ./configure --prefix="$BUILD_DIR" --disable-examples --disable-unit-tests && \
@@ -100,7 +100,7 @@ RUN cd $SRC_DIR && \
 
 RUN cd $SRC_DIR && \
     wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
-    tar xjf ffmpeg-snapshot.tar.bz2 && \
+    tar xf ffmpeg-snapshot.tar.bz2 && \
     rm ffmpeg-snapshot.tar.bz2 && \
     cd ffmpeg && \
     ./configure \
