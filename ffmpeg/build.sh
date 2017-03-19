@@ -8,7 +8,7 @@ image_name=ymyzk/ffmpeg:sandybridge
 docker build \
     --build-arg CFLAGS="$CFLAGS" \
     --build-arg CPPFLAGS="$CPPFLAGS" \
-    --build-arg NUM_PROC=1 \
+    --build-arg NUM_PROC="$NUM_PROC" \
     -t $image_name .
 docker run --name $container_name $image_name ls /app/bin/ffmpeg
 docker cp $container_name:/app/bin/ffmpeg ./
