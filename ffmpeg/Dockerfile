@@ -5,10 +5,12 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y \
         autoconf \
         automake \
-        build-essential \
         ca-certificates \
         cmake \
+        gcc \
+        g++ \
         libtool \
+        make \
         pkg-config \
         wget && \
     rm -rf /var/lib/apt/lists/*
