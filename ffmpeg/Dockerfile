@@ -38,10 +38,11 @@ RUN cd $SRC_DIR && \
     ./configure --prefix="$BUILD_DIR" --bindir="$BIN_DIR" && \
     make "-j$NUM_PROC" && \
     make install && \
-    make distclean
+    make distclean && \
+    cd $SRC_DIR && \
+    rm -rf yasm-$YASM_VER
 
-RUN cd $SRC_DIR && \
-    wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
+RUN wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
     tar xf last_x264.tar.bz2 && \
     rm last_x264.tar.bz2 && \
     cd x264-snapshot* && \
@@ -53,22 +54,25 @@ RUN cd $SRC_DIR && \
         --disable-opencl && \
     make "-j$NUM_PROC" && \
     make install && \
-    make distclean
+    make distclean && \
+    cd $SRC_DIR && \
+    rm -rf x264-snapshot*
 
 # TODO: should specidy build path on cmake instead of `ln -s ...`
 RUN cd $SRC_DIR && \
     wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/default.tar.gz && \
     tar xf x265.tar.gz && \
     rm x265.tar.gz && \
-    cd ./multicoreware*/build/linux && \
+    cd multicoreware*/build/linux && \
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$BUILD_DIR" -DENABLE_SHARED:bool=off ../../source && \
     make "-j$NUM_PROC" && \
     make install && \
     cd $ROOT_DIR && \
-    ln -s ./build/bin/x265 ./bin/x265
+    ln -s ./build/bin/x265 ./bin/x265 && \
+    cd $SRC_DIR && \
+    rm -rf multicoreware*
 
-RUN cd $SRC_DIR && \
-    wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master && \
+RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master && \
     tar xf fdk-aac.tar.gz && \
     rm fdk-aac.tar.gz && \
     cd mstorsjo-fdk-aac* && \
@@ -76,30 +80,33 @@ RUN cd $SRC_DIR && \
     ./configure --prefix="$BUILD_DIR" --disable-shared && \
     make "-j$NUM_PROC" && \
     make install && \
-    make distclean
+    make distclean && \
+    cd $SRC_DIR && \
+    rm -rf mstorsjo-fdk-aac*
 
-RUN cd $SRC_DIR && \
-    wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz && \
+RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz && \
     tar xf lame.tar.gz && \
     rm lame.tar.gz && \
     cd lame-3.99.5 && \
     ./configure --prefix="$BUILD_DIR" --enable-nasm --disable-shared && \
     make "-j$NUM_PROC" && \
     make install && \
-    make distclean
+    make distclean && \
+    cd $SRC_DIR && \
+    rm -rf lame-*
 
-RUN cd $SRC_DIR && \
-    wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
+RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
     tar xf libvpx.tar.bz2 && \
     rm libvpx.tar.bz2 && \
     cd "libvpx-$LIBVPX_VER" && \
     ./configure --prefix="$BUILD_DIR" --disable-examples --disable-unit-tests && \
     make "-j$NUM_PROC" && \
     make install && \
-    make clean
+    make clean && \
+    cd $SRC_DIR && \
+    rm -rf libvpx-*
 
-RUN cd $SRC_DIR && \
-    wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
+RUN wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
     tar xf ffmpeg-snapshot.tar.bz2 && \
     rm ffmpeg-snapshot.tar.bz2 && \
     cd ffmpeg && \
@@ -122,7 +129,9 @@ RUN cd $SRC_DIR && \
       --enable-nonfree && \
     make -j$NUM_PROC && \
     make install && \
-    make distclean
+    make distclean && \
+    cd $SRC_DIR && \
+    rm -rf ffmpeg
       #--enable-libvorbis \
       #--enable-libtheora \
       #--enable-libfreetype \
