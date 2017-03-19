@@ -10,7 +10,8 @@ RUN apt-get update && \
         cmake \
         libtool \
         pkg-config \
-        wget
+        wget && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV ROOT_DIR /app
 ENV BIN_DIR "$ROOT_DIR/bin"
@@ -44,7 +45,12 @@ RUN cd $SRC_DIR && \
     tar xjvf last_x264.tar.bz2 && \
     rm last_x264.tar.bz2 && \
     cd x264-snapshot* && \
-    ./configure --prefix="$BUILD_DIR" --bindir="$BIN_DIR" --enable-static --disable-shared --disable-opencl && \
+    ./configure \
+        --prefix="$BUILD_DIR" \
+        --bindir="$BIN_DIR" \
+        --enable-static \
+        --enable-pic \
+        --disable-opencl && \
     make "-j$NUM_PROC" && \
     make install && \
     make distclean
