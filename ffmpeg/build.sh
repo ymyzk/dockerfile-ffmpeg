@@ -3,7 +3,7 @@ cd $(dirname $0)
 set -ex
 
 container_name=ffmpeg_copy
-image_name=ymyzk/ffmpeg:sandybridge
+image_name=ymyzk/ffmpeg
 
 docker build \
     --build-arg CFLAGS="$CFLAGS" \
