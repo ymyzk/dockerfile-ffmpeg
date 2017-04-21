@@ -30,6 +30,7 @@ ARG CPPFLAGS=""
 ARG NUM_PROC=1
 
 ENV LIBVPX_VER 1.6.1
+ENV X265_VER 2.3
 ENV YASM_VER 1.3.0
 
 RUN cd $SRC_DIR && \
@@ -62,7 +63,7 @@ RUN wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
 
 # TODO: should specidy build path on cmake instead of `ln -s ...`
 RUN cd $SRC_DIR && \
-    wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/default.tar.gz && \
+    wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
     tar xf x265.tar.gz && \
     rm x265.tar.gz && \
     cd multicoreware*/build/linux && \
