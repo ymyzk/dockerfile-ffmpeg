@@ -32,6 +32,7 @@ ARG CFLAGS=""
 ARG CPPFLAGS=""
 ARG NUM_PROC=1
 
+ENV FFMPEG_VER 3.3
 ENV LIBVPX_VER 1.6.1
 ENV X265_VER 2.3
 ENV YASM_VER 1.3.0
@@ -110,10 +111,10 @@ RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.
     cd .. && \
     rm -rf libvpx-*
 
-RUN wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
-    tar xf ffmpeg-snapshot.tar.bz2 && \
-    rm ffmpeg-snapshot.tar.bz2 && \
-    cd ffmpeg && \
+RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz2 && \
+    tar xf ffmpeg.tar.bz2 && \
+    rm ffmpeg.tar.bz2 && \
+    cd ffmpeg* && \
     ./configure \
       --prefix="$BUILD_DIR" \
       --pkg-config-flags="--static" \
@@ -137,8 +138,7 @@ RUN wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
     make install && \
     make distclean && \
     cd .. && \
-    rm -rf ffmpeg
-      #--enable-libvorbis \
+    rm -rf ffmpeg*
       #--enable-libtheora \
       #--enable-libfreetype \
       #--enable-libass \
