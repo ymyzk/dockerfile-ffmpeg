@@ -23,7 +23,7 @@ ENV PATH="$BIN_DIR:$PATH"
 ENV PKG_CONFIG_PATH "$BUILD_DIR/lib/pkgconfig"
 
 RUN mkdir -p $SRC_DIR
-WORKDIR $ROOT_DIR
+WORKDIR $SRC_DIR
 
 ARG CFLAGS=""
 ARG CPPFLAGS=""
@@ -33,8 +33,7 @@ ENV LIBVPX_VER 1.6.1
 ENV X265_VER 2.3
 ENV YASM_VER 1.3.0
 
-RUN cd $SRC_DIR && \
-    wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM_VER.tar.gz && \
+RUN wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM_VER.tar.gz && \
     tar xf yasm.tar.gz && \
     rm yasm.tar.gz && \
     cd yasm-$YASM_VER && \
@@ -42,7 +41,7 @@ RUN cd $SRC_DIR && \
     make "-j$NUM_PROC" && \
     make install && \
     make distclean && \
-    cd $SRC_DIR && \
+    cd .. && \
     rm -rf yasm-$YASM_VER
 
 RUN wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
@@ -58,12 +57,11 @@ RUN wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
     make "-j$NUM_PROC" && \
     make install && \
     make distclean && \
-    cd $SRC_DIR && \
+    cd .. && \
     rm -rf x264-snapshot*
 
 # TODO: should specidy build path on cmake instead of `ln -s ...`
-RUN cd $SRC_DIR && \
-    wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
+RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
     tar xf x265.tar.gz && \
     rm x265.tar.gz && \
     cd multicoreware*/build/linux && \
@@ -95,7 +93,7 @@ RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/3.99/
     make "-j$NUM_PROC" && \
     make install && \
     make distclean && \
-    cd $SRC_DIR && \
+    cd .. && \
     rm -rf lame-*
 
 RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
@@ -106,7 +104,7 @@ RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.
     make "-j$NUM_PROC" && \
     make install && \
     make clean && \
-    cd $SRC_DIR && \
+    cd .. && \
     rm -rf libvpx-*
 
 RUN wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
@@ -133,7 +131,7 @@ RUN wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
     make -j$NUM_PROC && \
     make install && \
     make distclean && \
-    cd $SRC_DIR && \
+    cd .. && \
     rm -rf ffmpeg
       #--enable-libvorbis \
       #--enable-libtheora \
