@@ -33,7 +33,9 @@ ARG CPPFLAGS=""
 ARG NUM_PROC=1
 
 ENV FFMPEG_VER 3.3
+ENV LIBOGG_VER 1.3.2
 ENV LIBVPX_VER 1.6.1
+ENV LIBVORBIS_VER 1.3.5
 ENV X265_VER 2.3
 ENV YASM_VER 1.3.0
 
@@ -100,6 +102,17 @@ RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/3.99/
     cd .. && \
     rm -rf lame-*
 
+RUN wget -O libogg.tar.xz "http://downloads.xiph.org/releases/ogg/libogg-$LIBOGG_VER.tar.xz" && \
+    tar xf libogg.tar.xz && \
+    rm libogg.tar.xz && \
+    cd libogg* && \
+    ./configure --prefix="$BUILD_DIR" --disable-shared && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make clean && \
+    cd .. && \
+    rm -rf libogg*
+
 RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
     tar xf libvpx.tar.bz2 && \
     rm libvpx.tar.bz2 && \
@@ -110,6 +123,17 @@ RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.
     make clean && \
     cd .. && \
     rm -rf libvpx-*
+
+RUN wget -O libvorbis.tar.xz "http://downloads.xiph.org/releases/vorbis/libvorbis-$LIBVORBIS_VER.tar.xz" && \
+    tar xf libvorbis.tar.xz && \
+    rm libvorbis.tar.xz && \
+    cd libvorbis* && \
+    ./configure --prefix="$BUILD_DIR" --disable-shared && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make clean && \
+    cd .. && \
+    rm -rf libvorbis*
 
 RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz2 && \
     tar xf ffmpeg.tar.bz2 && \
@@ -131,6 +155,7 @@ RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz
       --enable-libfdk-aac \
       --enable-libmp3lame \
       --enable-libvpx \
+      --enable-libvorbis \
       --enable-libx264 \
       --enable-libx265 \
       --enable-nonfree && \
@@ -139,7 +164,3 @@ RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz
     make distclean && \
     cd .. && \
     rm -rf ffmpeg*
-      #--enable-libtheora \
-      #--enable-libfreetype \
-      #--enable-libass \
-      #--enable-lto
