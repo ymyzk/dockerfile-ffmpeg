@@ -6,6 +6,7 @@ RUN apt-get update && \
         autoconf \
         automake \
         ca-certificates \
+        clang \
         cmake \
         gcc \
         g++ \
@@ -25,6 +26,8 @@ ENV PKG_CONFIG_PATH "$BUILD_DIR/lib/pkgconfig"
 RUN mkdir -p $SRC_DIR
 WORKDIR $SRC_DIR
 
+ARG CC=clang
+ARG CXX=clang++
 ARG CFLAGS=""
 ARG CPPFLAGS=""
 ARG NUM_PROC=1
@@ -117,6 +120,8 @@ RUN wget https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
       --extra-cflags="-I$BUILD_DIR/include --static" \
       --extra-ldflags="-L$BUILD_DIR/lib -static" \
       --bindir="$BIN_DIR" \
+      --cc="$CC" \
+      --cxx="$CXX" \
       --disable-debug \
       --disable-ffserver \
       --disable-shared \
