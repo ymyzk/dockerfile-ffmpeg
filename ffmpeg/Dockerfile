@@ -36,8 +36,20 @@ ENV FFMPEG_VER 3.3
 ENV LIBOGG_VER 1.3.2
 ENV LIBVPX_VER 1.6.1
 ENV LIBVORBIS_VER 1.3.5
+ENV NASM_VER 2.13.01
 ENV X265_VER 2.3
 ENV YASM_VER 1.3.0
+
+RUN wget -O nasm.tar.gz http://www.nasm.us/pub/nasm/releasebuilds/$NASM_VER/nasm-$NASM_VER.tar.xz && \
+    tar xf nasm.tar.gz && \
+    rm nasm.tar.gz && \
+    cd nasm* && \
+    ./configure --prefix="$BUILD_DIR" --bindir="$BIN_DIR" && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make distclean && \
+    cd .. && \
+    rm -rf nasm*
 
 RUN wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM_VER.tar.gz && \
     tar xf yasm.tar.gz && \
