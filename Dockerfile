@@ -37,6 +37,7 @@ ENV LIBOGG_VER 1.3.2
 ENV LIBVPX_VER 1.6.1
 ENV LIBVORBIS_VER 1.3.5
 ENV NASM_VER 2.13.01
+ENV X264_VER 20170528-2245-stable
 ENV X265_VER 2.4
 ENV YASM_VER 1.3.0
 
@@ -62,10 +63,10 @@ RUN wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM
     cd .. && \
     rm -rf yasm-$YASM_VER
 
-RUN wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
-    tar xf last_x264.tar.bz2 && \
-    rm last_x264.tar.bz2 && \
-    cd x264-snapshot* && \
+RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-snapshot-$X264_VER.tar.bz2 && \
+    tar xf x264.tar.bz2 && \
+    rm x264.tar.bz2 && \
+    cd x264* && \
     ./configure \
         --prefix="$BUILD_DIR" \
         --bindir="$BIN_DIR" \
@@ -76,7 +77,7 @@ RUN wget https://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2 && \
     make install && \
     make distclean && \
     cd .. && \
-    rm -rf x264-snapshot*
+    rm -rf x264*
 
 # TODO: should specidy build path on cmake instead of `ln -s ...`
 RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
