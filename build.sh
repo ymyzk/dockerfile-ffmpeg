@@ -16,6 +16,6 @@ docker build \
     --build-arg CPPFLAGS="$CPPFLAGS" \
     --build-arg NUM_PROC="$NUM_PROC" \
     -t $image_name .
-docker run --name $container_name $image_name ls /app/bin/ffmpeg
+docker create --name $container_name $image_name
 docker cp $container_name:/app/bin/ffmpeg ./
 docker rm $container_name
