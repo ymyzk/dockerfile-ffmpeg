@@ -33,6 +33,7 @@ ARG CPPFLAGS=""
 ARG NUM_PROC=1
 
 ENV FFMPEG_VER 3.3.1
+ENV LAME_VER 3.99.5
 ENV LIBOGG_VER 1.3.2
 ENV LIBVPX_VER 1.6.1
 ENV LIBVORBIS_VER 1.3.5
@@ -104,10 +105,10 @@ RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master &&
     cd $SRC_DIR && \
     rm -rf mstorsjo-fdk-aac*
 
-RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz && \
+RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/$(echo -n $LAME_VER | sed -e "s/\.[0-9]\+//2")/lame-$LAME_VER.tar.gz && \
     tar xf lame.tar.gz && \
     rm lame.tar.gz && \
-    cd lame-3.99.5 && \
+    cd lame-* && \
     ./configure --prefix="$BUILD_DIR" --enable-nasm --disable-shared && \
     make "-j$NUM_PROC" && \
     make install && \
