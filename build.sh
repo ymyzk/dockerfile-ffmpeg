@@ -2,7 +2,6 @@
 cd $(dirname $0)
 set -e
 
-container_name=ffmpeg_copy
 image_name=ymyzk/ffmpeg
 
 if [ -z ${NUM_PROC+x} ]; then
@@ -16,6 +15,6 @@ docker build \
     --build-arg CPPFLAGS="$CPPFLAGS" \
     --build-arg NUM_PROC="$NUM_PROC" \
     -t $image_name .
-docker create --name $container_name $image_name
-docker cp $container_name:/app/bin/ffmpeg ./
-docker rm $container_name
+container=$(docker create $image_name)
+docker cp $container:/app/bin/ffmpeg ./
+docker rm $container
