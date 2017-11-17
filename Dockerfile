@@ -32,16 +32,7 @@ ARG CFLAGS=""
 ARG CPPFLAGS=""
 ARG NUM_PROC=1
 
-ENV FFMPEG_VER 3.3.4
-ENV LAME_VER 3.99.5
-ENV LIBOGG_VER 1.3.2
-ENV LIBVPX_VER 1.6.1
-ENV LIBVORBIS_VER 1.3.5
 ENV NASM_VER 2.13.01
-ENV X264_VER 20170917-2245
-ENV X265_VER 2.5
-ENV YASM_VER 1.3.0
-
 RUN wget -O nasm.tar.gz http://www.nasm.us/pub/nasm/releasebuilds/$NASM_VER/nasm-$NASM_VER.tar.xz && \
     tar xf nasm.tar.gz && \
     rm nasm.tar.gz && \
@@ -53,6 +44,7 @@ RUN wget -O nasm.tar.gz http://www.nasm.us/pub/nasm/releasebuilds/$NASM_VER/nasm
     cd .. && \
     rm -rf nasm*
 
+ENV YASM_VER 1.3.0
 RUN wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM_VER.tar.gz && \
     tar xf yasm.tar.gz && \
     rm yasm.tar.gz && \
@@ -64,6 +56,81 @@ RUN wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM
     cd .. && \
     rm -rf yasm-$YASM_VER
 
+RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master && \
+    tar xf fdk-aac.tar.gz && \
+    rm fdk-aac.tar.gz && \
+    cd mstorsjo-fdk-aac* && \
+    autoreconf -fiv && \
+    ./configure --prefix="$BUILD_DIR" --disable-shared && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make distclean && \
+    cd $SRC_DIR && \
+    rm -rf mstorsjo-fdk-aac*
+
+ENV LAME_VER 3.99.5
+RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/$(echo -n $LAME_VER | sed -e "s/\.[0-9]\+//2")/lame-$LAME_VER.tar.gz && \
+    tar xf lame.tar.gz && \
+    rm lame.tar.gz && \
+    cd lame-* && \
+    ./configure --prefix="$BUILD_DIR" --enable-nasm --disable-shared && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make distclean && \
+    cd .. && \
+    rm -rf lame-*
+
+ENV LIBOGG_VER 1.3.2
+RUN wget -O libogg.tar.xz "http://downloads.xiph.org/releases/ogg/libogg-$LIBOGG_VER.tar.xz" && \
+    tar xf libogg.tar.xz && \
+    rm libogg.tar.xz && \
+    cd libogg* && \
+    ./configure --prefix="$BUILD_DIR" --disable-shared && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make clean && \
+    cd .. && \
+    rm -rf libogg*
+
+ENV LIBVPX_VER 1.6.1
+RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
+    tar xf libvpx.tar.bz2 && \
+    rm libvpx.tar.bz2 && \
+    cd "libvpx-$LIBVPX_VER" && \
+    ./configure --prefix="$BUILD_DIR" --disable-examples --disable-unit-tests && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make clean && \
+    cd .. && \
+    rm -rf libvpx-*
+
+ENV LIBVORBIS_VER 1.3.5
+RUN wget -O libvorbis.tar.xz "http://downloads.xiph.org/releases/vorbis/libvorbis-$LIBVORBIS_VER.tar.xz" && \
+    tar xf libvorbis.tar.xz && \
+    rm libvorbis.tar.xz && \
+    cd libvorbis* && \
+    ./configure --prefix="$BUILD_DIR" --disable-shared && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make clean && \
+    cd .. && \
+    rm -rf libvorbis*
+
+ENV X265_VER 2.5
+# TODO: should specidy build path on cmake instead of `ln -s ...`
+RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
+    tar xf x265.tar.gz && \
+    rm x265.tar.gz && \
+    cd multicoreware*/build/linux && \
+    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$BUILD_DIR" -DENABLE_SHARED:bool=off ../../source && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    cd $ROOT_DIR && \
+    ln -s ./build/bin/x265 ./bin/x265 && \
+    cd $SRC_DIR && \
+    rm -rf multicoreware*
+
+ENV X264_VER 20170917-2245
 RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-snapshot-$X264_VER.tar.bz2 && \
     tar xf x264.tar.bz2 && \
     rm x264.tar.bz2 && \
@@ -80,75 +147,7 @@ RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-s
     cd .. && \
     rm -rf x264*
 
-# TODO: should specidy build path on cmake instead of `ln -s ...`
-RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
-    tar xf x265.tar.gz && \
-    rm x265.tar.gz && \
-    cd multicoreware*/build/linux && \
-    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$BUILD_DIR" -DENABLE_SHARED:bool=off ../../source && \
-    make "-j$NUM_PROC" && \
-    make install && \
-    cd $ROOT_DIR && \
-    ln -s ./build/bin/x265 ./bin/x265 && \
-    cd $SRC_DIR && \
-    rm -rf multicoreware*
-
-RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master && \
-    tar xf fdk-aac.tar.gz && \
-    rm fdk-aac.tar.gz && \
-    cd mstorsjo-fdk-aac* && \
-    autoreconf -fiv && \
-    ./configure --prefix="$BUILD_DIR" --disable-shared && \
-    make "-j$NUM_PROC" && \
-    make install && \
-    make distclean && \
-    cd $SRC_DIR && \
-    rm -rf mstorsjo-fdk-aac*
-
-RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/$(echo -n $LAME_VER | sed -e "s/\.[0-9]\+//2")/lame-$LAME_VER.tar.gz && \
-    tar xf lame.tar.gz && \
-    rm lame.tar.gz && \
-    cd lame-* && \
-    ./configure --prefix="$BUILD_DIR" --enable-nasm --disable-shared && \
-    make "-j$NUM_PROC" && \
-    make install && \
-    make distclean && \
-    cd .. && \
-    rm -rf lame-*
-
-RUN wget -O libogg.tar.xz "http://downloads.xiph.org/releases/ogg/libogg-$LIBOGG_VER.tar.xz" && \
-    tar xf libogg.tar.xz && \
-    rm libogg.tar.xz && \
-    cd libogg* && \
-    ./configure --prefix="$BUILD_DIR" --disable-shared && \
-    make "-j$NUM_PROC" && \
-    make install && \
-    make clean && \
-    cd .. && \
-    rm -rf libogg*
-
-RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
-    tar xf libvpx.tar.bz2 && \
-    rm libvpx.tar.bz2 && \
-    cd "libvpx-$LIBVPX_VER" && \
-    ./configure --prefix="$BUILD_DIR" --disable-examples --disable-unit-tests && \
-    make "-j$NUM_PROC" && \
-    make install && \
-    make clean && \
-    cd .. && \
-    rm -rf libvpx-*
-
-RUN wget -O libvorbis.tar.xz "http://downloads.xiph.org/releases/vorbis/libvorbis-$LIBVORBIS_VER.tar.xz" && \
-    tar xf libvorbis.tar.xz && \
-    rm libvorbis.tar.xz && \
-    cd libvorbis* && \
-    ./configure --prefix="$BUILD_DIR" --disable-shared && \
-    make "-j$NUM_PROC" && \
-    make install && \
-    make clean && \
-    cd .. && \
-    rm -rf libvorbis*
-
+ENV FFMPEG_VER 3.3.4
 RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz2 && \
     tar xf ffmpeg.tar.bz2 && \
     rm ffmpeg.tar.bz2 && \
