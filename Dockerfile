@@ -68,7 +68,7 @@ RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master &&
     cd $SRC_DIR && \
     rm -rf mstorsjo-fdk-aac*
 
-ENV LAME_VER 3.99.5
+ENV LAME_VER 3.100
 RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/$(echo -n $LAME_VER | sed -e "s/\.[0-9]\+//2")/lame-$LAME_VER.tar.gz && \
     tar xf lame.tar.gz && \
     rm lame.tar.gz && \
