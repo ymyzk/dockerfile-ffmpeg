@@ -171,6 +171,7 @@ RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz
       --enable-libvorbis \
       --enable-libx264 \
       --enable-libx265 \
+      --enable-nvenc \
       --enable-nonfree && \
     make -j$NUM_PROC && \
     make install && \
