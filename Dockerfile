@@ -155,8 +155,8 @@ RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz
     ./configure \
       --prefix="$BUILD_DIR" \
       --pkg-config-flags="--static" \
-      --extra-cflags="-I$BUILD_DIR/include --static" \
-      --extra-ldflags="-L$BUILD_DIR/lib -static" \
+      --extra-cflags="-I$BUILD_DIR/include" \
+      --extra-ldflags="-L$BUILD_DIR/lib" \
       --bindir="$BIN_DIR" \
       --cc="$CC" \
       --cxx="$CXX" \
@@ -178,3 +178,6 @@ RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz
     make distclean && \
     cd .. && \
     rm -rf ffmpeg*
+      # Temporary for nvenc
+      # --extra-cflags="-I$BUILD_DIR/include --static" \
+      # --extra-ldflags="-L$BUILD_DIR/lib -static" \
