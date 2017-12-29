@@ -32,7 +32,7 @@ ARG CFLAGS=""
 ARG CPPFLAGS=""
 ARG NUM_PROC=1
 
-ENV NASM_VER 2.13.01
+ENV NASM_VER 2.13.02
 RUN wget -O nasm.tar.gz http://www.nasm.us/pub/nasm/releasebuilds/$NASM_VER/nasm-$NASM_VER.tar.xz && \
     tar xf nasm.tar.gz && \
     rm nasm.tar.gz && \
@@ -116,7 +116,7 @@ RUN wget -O libvorbis.tar.xz "http://downloads.xiph.org/releases/vorbis/libvorbi
     cd .. && \
     rm -rf libvorbis*
 
-ENV X265_VER 2.5
+ENV X265_VER 2.6
 # TODO: should specidy build path on cmake instead of `ln -s ...`
 RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
     tar xf x265.tar.gz && \
@@ -130,7 +130,7 @@ RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.t
     cd $SRC_DIR && \
     rm -rf multicoreware*
 
-ENV X264_VER 20171116-2245
+ENV X264_VER 20171210-2245
 RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-snapshot-$X264_VER.tar.bz2 && \
     tar xf x264.tar.bz2 && \
     rm x264.tar.bz2 && \
@@ -147,7 +147,7 @@ RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-s
     cd .. && \
     rm -rf x264*
 
-ENV FFMPEG_VER 3.4
+ENV FFMPEG_VER 3.4.1
 RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz2 && \
     tar xf ffmpeg.tar.bz2 && \
     rm ffmpeg.tar.bz2 && \
