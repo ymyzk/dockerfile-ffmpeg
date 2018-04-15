@@ -130,7 +130,7 @@ RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.t
     cd $SRC_DIR && \
     rm -rf multicoreware*
 
-ENV X264_VER 20171210-2245
+ENV X264_VER 20180410-2245
 RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-snapshot-$X264_VER.tar.bz2 && \
     tar xf x264.tar.bz2 && \
     rm x264.tar.bz2 && \
