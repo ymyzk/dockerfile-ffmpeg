@@ -92,10 +92,10 @@ RUN wget -O libogg.tar.xz "http://downloads.xiph.org/releases/ogg/libogg-$LIBOGG
     cd .. && \
     rm -rf libogg*
 
-ENV LIBVPX_VER 1.6.1
-RUN wget -O libvpx.tar.bz2 "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-$LIBVPX_VER.tar.bz2" && \
-    tar xf libvpx.tar.bz2 && \
-    rm libvpx.tar.bz2 && \
+ENV LIBVPX_VER 1.7.0
+RUN wget -O libvpx.tar.gz "https://github.com/webmproject/libvpx/archive/v$LIBVPX_VER.tar.gz" && \
+    tar xf libvpx.tar.gz && \
+    rm libvpx.tar.gz && \
     cd "libvpx-$LIBVPX_VER" && \
     ./configure --prefix="$BUILD_DIR" --disable-examples --disable-unit-tests && \
     make "-j$NUM_PROC" && \
