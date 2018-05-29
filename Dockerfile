@@ -9,6 +9,7 @@ RUN apt-get update && \
         clang \
         cmake \
         gcc \
+        git \
         g++ \
         libtool \
         make \
@@ -61,7 +62,7 @@ RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master &&
     rm fdk-aac.tar.gz && \
     cd mstorsjo-fdk-aac* && \
     autoreconf -fiv && \
-    ./configure --prefix="$BUILD_DIR" --disable-shared && \
+    ./configure --prefix="$BUILD_DIR" --disable-shared --with-pic=yes && \
     make "-j$NUM_PROC" && \
     make install && \
     make distclean && \
@@ -73,7 +74,7 @@ RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/$(ech
     tar xf lame.tar.gz && \
     rm lame.tar.gz && \
     cd lame-* && \
-    ./configure --prefix="$BUILD_DIR" --enable-nasm --disable-shared && \
+    ./configure --prefix="$BUILD_DIR" --enable-nasm --with-pic=yes --disable-shared && \
     make "-j$NUM_PROC" && \
     make install && \
     make distclean && \
@@ -109,7 +110,7 @@ RUN wget -O libvorbis.tar.xz "http://downloads.xiph.org/releases/vorbis/libvorbi
     tar xf libvorbis.tar.xz && \
     rm libvorbis.tar.xz && \
     cd libvorbis* && \
-    ./configure --prefix="$BUILD_DIR" --disable-shared && \
+    ./configure --prefix="$BUILD_DIR" --disable-shared --with-pic=yes && \
     make "-j$NUM_PROC" && \
     make install && \
     make clean && \
@@ -147,7 +148,13 @@ RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-s
     cd .. && \
     rm -rf x264*
 
-ENV FFMPEG_VER 3.4.2
+ENV NV_CODEC_VER n8.1.24.2
+RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
+    cd nv-codec-headers && \
+    git checkout $NV_CODEC_VER && \
+    PREFIX="$BUILD_DIR" make install
+
+ENV FFMPEG_VER 4.0
 RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz2 && \
     tar xf ffmpeg.tar.bz2 && \
     rm ffmpeg.tar.bz2 && \
@@ -157,12 +164,15 @@ RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz
       --pkg-config-flags="--static" \
       --extra-cflags="-I$BUILD_DIR/include" \
       --extra-ldflags="-L$BUILD_DIR/lib" \
+      --extra-ldexeflags="-Bstatic" \
+      # TODO: https://bitbucket.org/multicoreware/x265/issues/371
+      --extra-libs=-lpthread \
       --bindir="$BIN_DIR" \
       --cc="$CC" \
       --cxx="$CXX" \
       --disable-debug \
-      --disable-ffserver \
       --disable-shared \
+      --enable-pic \
       --enable-static \
       --enable-gpl \
       --enable-libfdk-aac \
