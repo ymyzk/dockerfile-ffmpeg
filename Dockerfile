@@ -131,7 +131,7 @@ RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.t
     cd $SRC_DIR && \
     rm -rf multicoreware*
 
-ENV X264_VER 20180510-2245
+ENV X264_VER 20180630-2245
 RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-snapshot-$X264_VER.tar.bz2 && \
     tar xf x264.tar.bz2 && \
     rm x264.tar.bz2 && \
@@ -154,7 +154,7 @@ RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
     git checkout $NV_CODEC_VER && \
     PREFIX="$BUILD_DIR" make install
 
-ENV FFMPEG_VER 4.0
+ENV FFMPEG_VER 4.0.1
 RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz2 && \
     tar xf ffmpeg.tar.bz2 && \
     rm ffmpeg.tar.bz2 && \
