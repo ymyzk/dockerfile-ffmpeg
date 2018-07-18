@@ -154,7 +154,7 @@ RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
     git checkout $NV_CODEC_VER && \
     PREFIX="$BUILD_DIR" make install
 
-ENV FFMPEG_VER 4.0.1
+ENV FFMPEG_VER 4.0.2
 RUN wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.bz2 && \
     tar xf ffmpeg.tar.bz2 && \
     rm ffmpeg.tar.bz2 && \
