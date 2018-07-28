@@ -93,18 +93,6 @@ RUN wget -O libogg.tar.xz "http://downloads.xiph.org/releases/ogg/libogg-$LIBOGG
     cd .. && \
     rm -rf libogg*
 
-ENV LIBVPX_VER 1.7.0
-RUN wget -O libvpx.tar.gz "https://github.com/webmproject/libvpx/archive/v$LIBVPX_VER.tar.gz" && \
-    tar xf libvpx.tar.gz && \
-    rm libvpx.tar.gz && \
-    cd "libvpx-$LIBVPX_VER" && \
-    ./configure --prefix="$BUILD_DIR" --disable-examples --disable-unit-tests && \
-    make "-j$NUM_PROC" && \
-    make install && \
-    make clean && \
-    cd .. && \
-    rm -rf libvpx-*
-
 ENV LIBVORBIS_VER 1.3.6
 RUN wget -O libvorbis.tar.xz "http://downloads.xiph.org/releases/vorbis/libvorbis-$LIBVORBIS_VER.tar.xz" && \
     tar xf libvorbis.tar.xz && \
@@ -116,6 +104,18 @@ RUN wget -O libvorbis.tar.xz "http://downloads.xiph.org/releases/vorbis/libvorbi
     make clean && \
     cd .. && \
     rm -rf libvorbis*
+
+ENV LIBVPX_VER 1.7.0
+RUN wget -O libvpx.tar.gz "https://github.com/webmproject/libvpx/archive/v$LIBVPX_VER.tar.gz" && \
+    tar xf libvpx.tar.gz && \
+    rm libvpx.tar.gz && \
+    cd "libvpx-$LIBVPX_VER" && \
+    ./configure --prefix="$BUILD_DIR" --disable-examples --disable-unit-tests && \
+    make "-j$NUM_PROC" && \
+    make install && \
+    make clean && \
+    cd .. && \
+    rm -rf libvpx-*
 
 ENV X265_VER 2.8
 # TODO: should specidy build path on cmake instead of `ln -s ...`
