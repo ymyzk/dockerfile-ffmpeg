@@ -57,17 +57,19 @@ RUN wget -O yasm.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-$YASM
     cd .. && \
     rm -rf yasm-$YASM_VER
 
-RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master && \
-    tar xf fdk-aac.tar.gz && \
-    rm fdk-aac.tar.gz && \
-    cd mstorsjo-fdk-aac* && \
+ENV FDK_AAC_VER e45ae429b9ca8f234eb861338a75b2d89cde206a
+RUN git clone https://github.com/mstorsjo/fdk-aac.git && \
+    cd fdk-aac && \
+    git checkout $FDK_AAC_VER && \
+    pwd && \
+    ls && \
     autoreconf -fiv && \
     ./configure --prefix="$BUILD_DIR" --disable-shared --with-pic=yes && \
     make "-j$NUM_PROC" && \
     make install && \
     make distclean && \
     cd $SRC_DIR && \
-    rm -rf mstorsjo-fdk-aac*
+    rm -rf fdk-aac
 
 ENV LAME_VER 3.100
 RUN wget -O lame.tar.gz http://downloads.sourceforge.net/project/lame/lame/$(echo -n $LAME_VER | sed -e "s/\.[0-9]\+//2")/lame-$LAME_VER.tar.gz && \
@@ -131,7 +133,7 @@ RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.t
     cd $SRC_DIR && \
     rm -rf multicoreware*
 
-ENV X264_VER 20180726-2245
+ENV X264_VER 20180826-2245
 RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-snapshot-$X264_VER.tar.bz2 && \
     tar xf x264.tar.bz2 && \
     rm x264.tar.bz2 && \
@@ -148,7 +150,7 @@ RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-s
     cd .. && \
     rm -rf x264*
 
-ENV NV_CODEC_VER n8.1.24.2
+ENV NV_CODEC_VER e6f3a414a599529ce5da0863f3e060c19c8a19ce
 RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
     cd nv-codec-headers && \
     git checkout $NV_CODEC_VER && \
