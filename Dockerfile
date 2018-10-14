@@ -119,7 +119,7 @@ RUN wget -O libvpx.tar.gz "https://github.com/webmproject/libvpx/archive/v$LIBVP
     cd .. && \
     rm -rf libvpx-*
 
-ENV X265_VER 2.8
+ENV X265_VER 2.9
 # TODO: should specidy build path on cmake instead of `ln -s ...`
 RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.tar.gz && \
     tar xf x265.tar.gz && \
@@ -133,7 +133,7 @@ RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/get/$X265_VER.t
     cd $SRC_DIR && \
     rm -rf multicoreware*
 
-ENV X264_VER 20180826-2245
+ENV X264_VER 20180926-2245
 RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-snapshot-$X264_VER.tar.bz2 && \
     tar xf x264.tar.bz2 && \
     rm x264.tar.bz2 && \
@@ -150,7 +150,7 @@ RUN wget -O x264.tar.bz2 https://download.videolan.org/pub/x264/snapshots/x264-s
     cd .. && \
     rm -rf x264*
 
-ENV NV_CODEC_VER e6f3a414a599529ce5da0863f3e060c19c8a19ce
+ENV NV_CODEC_VER d098cb44f6103a03476d16ac2bbe14ecbc9e1175
 RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
     cd nv-codec-headers && \
     git checkout $NV_CODEC_VER && \
